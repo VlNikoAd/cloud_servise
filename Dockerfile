@@ -1,7 +1,7 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM openjdk:18-jdk-alpine
 
-EXPOSE 8080
+ARG JAR_FILE=target/*.jar
 
-ADD target/dimlom_cloud-Server-0.0.1-SNAPSHOT.jar app.jar
+COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

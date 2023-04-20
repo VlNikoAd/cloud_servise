@@ -1,21 +1,25 @@
-version: "3.9"
+version: '3'
+
 services:
-  postgres:
-    image: postgres:15.1
-    container_name: postgres
+  postgresql:
+    image: postgres:13-alpine
     environment:
-      POSTGRES_DB: "diplom_cloud_storage"
-      POSTGRES_USER: "diplom_cloud_app"
-      POSTGRES_PASSWORD: "diplom_cloud_app"
-      PGDATA: "/var/lib/postgresql/data/pgdata"
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cloud_service
     ports:
       - 5432:5432
-  cloudapp:
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  myapp:
+    container_name: cloud_service
     build: .
-    container_name: cloudapp
     ports:
-      - 8081:8080
+      - 8080:8080
     depends_on:
-      - postgres
+      - postgresql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/cloud_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
