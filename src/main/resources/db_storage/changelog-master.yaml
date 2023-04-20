@@ -1,0 +1,132 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-users
+      author: you
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: login
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: role
+                  type: VARCHAR(255)
+            indexes:
+              - createIndex:
+                  tableName: users
+                  indexName: users_login_idx
+                  columns:
+                    - column:
+                        name: login
+
+  - changeSet:
+      id: create-table-jwt-token
+      author: you
+      changes:
+        - createTable:
+            tableName: jwt_token
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: jwt_token_users_fk
+              - column:
+                  name: token
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+            indexes:
+              - createIndex:
+                  tableName: jwt_token
+                  indexName: jwt_token_token_idx
+                  columns:
+                    - column:
+                        name: token
+
+  - changeSet:
+      id: create-table-file
+      author: you
+      changes:
+        - createTable:
+            tableName: file
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: file_users_fk
+              - column:
+                  name: file_name
+                  type: VARCHAR(255)
+              - column:
+                  name: file
+                  type: BYTEA
+              - column:
+                  name: size
+                  type: BIGINT
+            indexes:
+              - createIndex:
+                  tableName: file
+                  indexName: file_file_name_idx
+                  columns:
+                    - column:
+                        name: file_name
+
+  - changeSet:
+      id: create-user
+      author: you
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: login
+                  value: user
+              - column:
+                  name: password
+                  value: userpass
+              - column:
+                  name: role
+                  value: USER
+  - changeSet:
+      id: insert-admin-user
+      author: you
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: login
+                  value: admin
+              - column:
+                  name: password
+                  value: adminpass
+              - column:
+                  name: role
+                  value: ADMIN
